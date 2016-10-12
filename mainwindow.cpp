@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *Parent)
 	ui->Seed->setMaximum(INT_MAX);
 	ui->Seed->setValue(time(nullptr));
 
+	ui->Threads->setValue(QThreadPool::globalInstance()->maxThreadCount());
+
 	ui->Plot->yAxis->setRange(0.0, 100.0);
 	ui->Plot->xAxis->setRange(-0.5, 10.5);
 
@@ -39,6 +41,13 @@ MainWindow::MainWindow(QWidget *Parent)
 
 	Bars = new QCPBars(ui->Plot->xAxis, ui->Plot->yAxis);
 
+	stopLocked << ui->actionStop << ui->actionPause;
+
+	runLocked << ui->actionRun << ui->runButton << ui->Distribution
+			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Threads;
+
+	SwitchUiStatus(Unlocked);
+
 	connect(ui->Plot->yAxis, SIGNAL(rangeChanged(const QCPRange&, const QCPRange&)), SLOT(PlotRangeChanged(const QCPRange&, const QCPRange&)));
 }
 
@@ -47,11 +56,59 @@ MainWindow::~MainWindow(void)
 	delete ui;
 }
 
+void MainWindow::SwitchUiStatus(MainWindow::UiStatus Status)
+{
+	switch (Status)
+	{
+		case Locked:
+		case Unlocked:
+		{
+			bool Lock = Status == Locked;
+
+			for (auto Control : runLocked)
+			{
+				if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(!Lock);
+				else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(!Lock);
+			}
+
+			for (auto Control : stopLocked)
+			{
+				if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(Lock);
+				else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(Lock);
+			}
+		}
+		break;
+
+		case Normal:
+
+		break;
+
+		case Extended:
+
+		break;
+	}
+}
+
 void MainWindow::PlotRangeChanged(const QCPRange& New, const QCPRange& Old)
 {
 	if (New.lower < 0) ui->Plot->yAxis->setRange(0, Old.size());
 }
 
+void MainWindow::RunActionClicked(void)
+{
+	SwitchUiStatus(Locked);
+}
+
+void MainWindow::StopActionClicked(void)
+{
+	SwitchUiStatus(Unlocked);
+}
+
+void MainWindow::PauseActionClicked(void)
+{
+	ui->actionRun->setEnabled(true);
+	ui->actionPause->setEnabled(false);
+}
 
 void MainWindow::AdjustActionClicked(void)
 {

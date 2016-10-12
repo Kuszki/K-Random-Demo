@@ -23,6 +23,8 @@
 
 #include <QMainWindow>
 
+#include <QDebug>
+
 #include <qcustomplot.h>
 #include <limits.h>
 
@@ -36,11 +38,26 @@ class MainWindow : public QMainWindow
 
 		Q_OBJECT
 
+	private: enum UiStatus
+	{
+		Unlocked,
+		Locked,
+		Normal,
+		Extended
+	};
+
 	private:
 
 		Ui::MainWindow* ui = nullptr;
 
+		QList<QObject*> runLocked;
+		QList<QObject*> stopLocked;
+
 		QCPBars* Bars = nullptr;
+
+	private:
+
+		void SwitchUiStatus(UiStatus Status);
 
 	public:
 
@@ -51,6 +68,9 @@ class MainWindow : public QMainWindow
 
 		void PlotRangeChanged(const QCPRange& New, const QCPRange& Old);
 
+		void RunActionClicked(void);
+		void StopActionClicked(void);
+		void PauseActionClicked(void);
 		void AdjustActionClicked(void);
 
 };

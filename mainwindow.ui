@@ -41,6 +41,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRun"/>
+   <addaction name="actionPause"/>
+   <addaction name="actionStop"/>
+   <addaction name="separator"/>
    <addaction name="actionAdjust"/>
    <addaction name="actionClear"/>
   </widget>
@@ -67,6 +70,12 @@
    <addaction name="actionAbout"/>
   </widget>
   <widget class="QDockWidget" name="toolDock">
+   <property name="minimumSize">
+    <size>
+     <width>250</width>
+     <height>500</height>
+    </size>
+   </property>
    <property name="windowIcon">
     <iconset theme="preferences-system">
      <normaloff>.</normaloff>.</iconset>
@@ -147,7 +156,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="1">
       <widget class="QPushButton" name="runButton">
        <property name="text">
         <string>Calculate</string>
@@ -161,6 +170,23 @@
        </property>
        <property name="maximum">
         <number>100000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="threadsLabel">
+       <property name="text">
+        <string>Threads</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="Threads">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10</number>
        </property>
       </widget>
      </item>
@@ -225,6 +251,30 @@
     <string>F6</string>
    </property>
   </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset theme="media-playback-stop">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="icon">
+    <iconset theme="media-playback-pause">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -261,7 +311,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>990</x>
-     <y>271</y>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -285,8 +335,59 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRun</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RunActionClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>StopActionClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPause</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>PauseActionClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>AdjustActionClicked()</slot>
+  <slot>RunActionClicked()</slot>
+  <slot>StopActionClicked()</slot>
+  <slot>PauseActionClicked()</slot>
  </slots>
 </ui>
