@@ -18,17 +18,21 @@
 #*                                                                         *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-QT		+=	core gui widgets printsupport
+QT			+=	core gui widgets printsupport
 
-TARGET	=	K-Random-Demo
-TEMPLATE	=	app
-CONFIG	+=	c++14
+TARGET		=	K-Random-Demo
+TEMPLATE		=	app
+CONFIG		+=	c++14
 
-SOURCES	+=	main.cpp \
-			mainwindow.cpp
+SOURCES		+=	main.cpp \
+				mainwindow.cpp
 
-HEADERS	+=	mainwindow.hpp
+HEADERS		+=	mainwindow.hpp
 
-FORMS	+=	mainwindow.ui
+FORMS		+=	mainwindow.ui
 
-LIBS		+=	-lqcustomplot
+LIBS			+=	-lqcustomplot
+
+TRANSLATIONS	+=	k-random-demo_pl.ts
+
+QMAKE_CXXFLAGS	+=	-s -march=native
