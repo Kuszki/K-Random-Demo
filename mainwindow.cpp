@@ -215,7 +215,7 @@ void MainWindow::RunActionClicked(void)
 			break;
 		}
 
-		if (Speed) while (Sleep < 100)
+		if (Speed) while (Sleep < 10)
 		{
 			Block *= 10;
 			Sleep *= 10;
