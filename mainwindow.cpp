@@ -189,8 +189,7 @@ void MainWindow::RunActionClicked(void)
 		const int Engine = ui->Engine->currentIndex();
 		const int Distribution = ui->Distribution->currentIndex();
 
-		unsigned Sleep(Speed ? 100 / Speed : 0);
-		unsigned Block(1), Base(100);
+		unsigned Sleep(Speed ? 1000 / Speed : 1), Block(1);
 		double P1(0.0), P2(0.0), P3(0.0);
 
 		switch (Distribution)
@@ -216,12 +215,10 @@ void MainWindow::RunActionClicked(void)
 			break;
 		}
 
-		if (Speed) while (!Sleep)
+		if (Speed) while (Sleep < 100)
 		{
-			Base *= 10;
 			Block *= 10;
-
-			Sleep = Base / Speed;
+			Sleep *= 10;
 		}
 		else
 		{
