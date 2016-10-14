@@ -35,17 +35,19 @@ void RandomWorker::runLoop(void)
 		const QTime Start = QTime::currentTime();
 		QMap<int, int> Results;
 
-		for (unsigned i = 0; Left && i < Iters; ++i, --Left)
+		unsigned i;
+
+		for (i = 0; Left && i < Iters; ++i, --Left)
 		{
 			++Results[Generator()];
 		}
 
-		const long long int Diff = Sleep * Iters - Start.msecsTo(QTime::currentTime());
+		const int Diff = Sleep - Start.msecsTo(QTime::currentTime());
 
 		emit onResultsReady(Results);
-		emit onProgressUpdate(++Current);
+		emit onProgressUpdate(Current += i);
 
-		if (Diff > 0) thread()->msleep(Diff);
+		if (Diff > 0 && Diff < 1001) thread()->msleep(Diff);
 
 		emit onLoopRequest();
 	}
@@ -70,7 +72,7 @@ void RandomWorker::startProgress(void)
 			Status = Running;
 
 			emit onStatusChanged(Status);
-			emit onProgressBegin(0, Loops / Iters);
+			emit onProgressBegin(0, Loops);
 			emit onLoopRequest();
 
 		break;

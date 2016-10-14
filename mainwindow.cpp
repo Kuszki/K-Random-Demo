@@ -197,8 +197,8 @@ void MainWindow::RunActionClicked(void)
 		const int Engine = ui->Engine->currentIndex();
 		const int Distribution = ui->Distribution->currentIndex();
 
-		unsigned Sleep(Speed ? 1000 / Speed : 0);
-		unsigned Block(1), Base(1000);
+		unsigned Sleep(Speed ? 100 / Speed : 0);
+		unsigned Block(1), Base(100);
 		double P1(0.0), P2(0.0), P3(0.0);
 
 		switch (Distribution)
