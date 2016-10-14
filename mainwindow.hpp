@@ -21,12 +21,21 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include <QtConcurrent>
+
+#include <QProgressBar>
 #include <QMainWindow>
 
 #include <QDebug>
 
+#include <boost/bind.hpp>
+#include <boost/random.hpp>
+#include <boost/function.hpp>
+
 #include <qcustomplot.h>
 #include <limits.h>
+
+#define MAX_ITERS 5000
 
 namespace Ui
 {
@@ -50,12 +59,24 @@ class MainWindow : public QMainWindow
 
 		Ui::MainWindow* ui = nullptr;
 
+		QProgressBar* Progress = nullptr;
+
+		QMap<double, double> Results;
+
 		QList<QObject*> runLocked;
 		QList<QObject*> stopLocked;
 
 		QCPBars* Bars = nullptr;
 
+		QTime Last = QTime::currentTime();
+
+		QFutureWatcher<QMap<int, double>> Watcher;
+
 	private:
+
+		QMap<int, double> RunWorkerBlock(QPair<int, boost::function<int (void)>> Params);
+
+		boost::function<int (void)> GetWorkerEngine(int Min, int Max, int Seed, int Distribution, int Engine);
 
 		void SwitchUiStatus(UiStatus Status);
 
@@ -68,10 +89,15 @@ class MainWindow : public QMainWindow
 
 		void PlotRangeChanged(const QCPRange& New, const QCPRange& Old);
 
+		void PlotReadyResult(int ID);
+
+		void RangeSpinChanged(void);
+
 		void RunActionClicked(void);
 		void StopActionClicked(void);
 		void PauseActionClicked(void);
 		void AdjustActionClicked(void);
+		void ClearActionClicked(void);
 
 };
 

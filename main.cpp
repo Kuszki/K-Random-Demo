@@ -17,12 +17,32 @@
  *  along with this program. If not, see http://www.gnu.org/licenses/.     *
  *                                                                         *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-#include "mainwindow.hpp"
+
 #include <QApplication>
 
-int main(int argc, char *argv[])
+#include "mainwindow.hpp"
+
+int main(int argc, char* argv[])
 {
 	QApplication a(argc, argv);
+
+	a.setApplicationName("K-Random-Demo");
+	a.setOrganizationName("Łukasz \"Kuszki\" Dróżdż");
+	a.setOrganizationDomain("https://github.com/Kuszki");
+	a.setApplicationVersion("1.0");
+
+	QTranslator qtTranslator;
+	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	a.installTranslator(&qtTranslator);
+
+	QTranslator baseTranslator;
+	baseTranslator.load("qtbase_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	a.installTranslator(&baseTranslator);
+
+	QTranslator appTranslator;
+	appTranslator.load("k-random-demo_" + QLocale::system().name());
+	a.installTranslator(&appTranslator);
+
 	MainWindow w;
 	w.show();
 

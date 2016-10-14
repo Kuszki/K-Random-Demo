@@ -72,7 +72,7 @@
   <widget class="QDockWidget" name="toolDock">
    <property name="minimumSize">
     <size>
-     <width>250</width>
+     <width>298</width>
      <height>500</height>
     </size>
    </property>
@@ -99,94 +99,169 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="Distribution"/>
+      <widget class="QComboBox" name="Distribution">
+       <item>
+        <property name="text">
+         <string>Uniform</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bernoulli</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Poisson</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Normal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Triangle</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sampling</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item row="1" column="0">
+      <widget class="QLabel" name="engineLabel">
+       <property name="text">
+        <string>Engine</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="Engine">
+       <item>
+        <property name="text">
+         <string>rand48</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>taus88</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ranlux4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>mt11213b</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="seedLabel">
        <property name="text">
         <string>Seed</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QSpinBox" name="Seed">
        <property name="displayIntegerBase">
         <number>16</number>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="samplesLabel">
        <property name="text">
         <string>Samples</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="Samples">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>500000000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
       <widget class="QLabel" name="maxLabel">
        <property name="text">
         <string>Minimum</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QSpinBox" name="Min">
        <property name="minimum">
         <number>0</number>
        </property>
        <property name="maximum">
-        <number>1000</number>
+        <number>99</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="minLabel">
        <property name="text">
         <string>Maximum</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QSpinBox" name="Max">
-       <property name="minimum">
-        <number>10</number>
-       </property>
-       <property name="maximum">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QPushButton" name="runButton">
-       <property name="text">
-        <string>Calculate</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="Samples">
        <property name="minimum">
         <number>1</number>
        </property>
        <property name="maximum">
-        <number>100000</number>
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>10</number>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QLabel" name="threadsLabel">
        <property name="text">
         <string>Threads</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="1">
       <widget class="QSpinBox" name="Threads">
        <property name="minimum">
         <number>1</number>
        </property>
        <property name="maximum">
         <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="Autoclear">
+       <property name="text">
+        <string>Autoclear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QPushButton" name="runButton">
+       <property name="text">
+        <string>Calculate</string>
        </property>
       </widget>
      </item>
@@ -246,9 +321,6 @@
    </property>
    <property name="text">
     <string>Adjust</string>
-   </property>
-   <property name="shortcut">
-    <string>F6</string>
    </property>
   </action>
   <action name="actionStop">
@@ -311,7 +383,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>990</x>
-     <y>306</y>
+     <y>375</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -383,11 +455,61 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionClear</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ClearActionClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Min</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RangeSpinChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>906</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1212</x>
+     <y>219</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Max</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RangeSpinChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>943</x>
+     <y>263</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1085</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>AdjustActionClicked()</slot>
   <slot>RunActionClicked()</slot>
   <slot>StopActionClicked()</slot>
   <slot>PauseActionClicked()</slot>
+  <slot>ClearActionClicked()</slot>
+  <slot>RangeSpinChanged()</slot>
  </slots>
 </ui>

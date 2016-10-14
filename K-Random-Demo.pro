@@ -18,7 +18,7 @@
 #*                                                                         *
 #* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-QT			+=	core gui widgets printsupport
+QT			+=	core gui widgets printsupport concurrent
 
 TARGET		=	K-Random-Demo
 TEMPLATE		=	app
