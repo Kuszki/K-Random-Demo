@@ -25,11 +25,18 @@ TEMPLATE		=	app
 CONFIG		+=	c++14
 
 SOURCES		+=	main.cpp \
-				mainwindow.cpp
+				mainwindow.cpp \
+				randomworker.cpp \
+				aboutdialog.cpp
 
-HEADERS		+=	mainwindow.hpp
+HEADERS		+=	mainwindow.hpp \
+				randomworker.hpp \
+				aboutdialog.hpp
 
-FORMS		+=	mainwindow.ui
+FORMS		+=	mainwindow.ui \
+				aboutdialog.ui
+
+RESOURCES		+=	resources.qrc
 
 LIBS			+=	-lqcustomplot
 

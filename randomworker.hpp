@@ -18,85 +18,81 @@
  *                                                                         *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#ifndef RANDOMWORKER_HPP
+#define RANDOMWORKER_HPP
 
-#include <QtConcurrent>
+#include <QObject>
+#include <QMutex>
+#include <QMap>
 
-#include <QProgressBar>
-#include <QMainWindow>
+#include <boost/bind.hpp>
+#include <boost/random.hpp>
+#include <boost/function.hpp>
 
-#include <QDebug>
-
-#include <qcustomplot.h>
-#include <limits.h>
-
-#include "randomworker.hpp"
-#include "aboutdialog.hpp"
-
-#define MAX_ITERS 5000
-
-namespace Ui
-{
-	class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class RandomWorker : public QObject
 {
 
 		Q_OBJECT
 
-	private: enum UiStatus
+	Q_PROPERTY(STATUS getStatus READ getStatus NOTIFY onStatusChanged)
+
+	public: enum STATUS
 	{
-		Unlocked,
-		Locked
+		Stopped,
+		Running,
+		Paused
 	};
 
 	private:
 
-		Ui::MainWindow* ui = nullptr;
+		boost::function<int (void)> Generator;
 
-		RandomWorker* Worker = nullptr;
+		QMutex Locker;
 
-		AboutDialog* About = nullptr;
+		STATUS Status = Stopped;
 
-		QMap<double, double> Results;
-
-		QList<QObject*> runLocked;
-		QList<QObject*> stopLocked;
-
-		QCPBars* Bars = nullptr;
-		QThread* Thread = nullptr;
-
-		QTime Last = QTime::currentTime();
-
-	private:
-
-		void SwitchUiStatus(UiStatus Status);
+		unsigned Loops = 1000;
+		unsigned Iters = 5000;
+		unsigned Left = 0;
+		unsigned Current = 0;
 
 	public:
 
-		explicit MainWindow(QWidget* Parent = nullptr);
-		virtual ~MainWindow(void) override;
+		explicit RandomWorker(QObject* Parent = nullptr);
+
+		boost::function<int (void)> getGenerator(double P1, double P2, double P3, int Seed, int Distribution, int Engine);
+
+		void setGenerator(double P1, double P2, double P3, int Seed, int Distribution, int Engine);
+		void setGenerator(const boost::function<int (void)>& Functional);
+
+		void setSamples(unsigned Samples);
+		void setBlocks(unsigned Blocks);
+
+		STATUS getStatus(void) const;
 
 	private slots:
 
-		void PlotRangeChanged(const QCPRange& New, const QCPRange& Old);
+		void runLoop(void);
 
-		void PlotReadyResult(const QMap<int, int>& Samples);
+	public slots:
 
-		void DistributionValueChanged(int Distribution);
+		void startProgress(void);
+		void pauseProgress(void);
+		void resumeProgress(void);
+		void stopProgress(void);
 
-		void RangeSpinChanged(void);
+	signals:
 
-		void RefreshButtonClicked(void);
+		void onResultsReady(const QMap<int, int>&);
 
-		void RunActionClicked(void);
-		void StopActionClicked(void);
-		void PauseActionClicked(void);
-		void AdjustActionClicked(void);
-		void ClearActionClicked(void);
+		void onStatusChanged(STATUS);
+
+		void onProgressBegin(int, int);
+		void onProgressUpdate(int);
+		void onProgressEnd(void);
+
+		void onLoopRequest(void);
 
 };
 
-#endif // MAINWINDOW_HPP
+#endif // RANDOMWORKER_HPP

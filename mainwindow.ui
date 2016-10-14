@@ -72,8 +72,8 @@
   <widget class="QDockWidget" name="toolDock">
    <property name="minimumSize">
     <size>
-     <width>298</width>
-     <height>500</height>
+     <width>250</width>
+     <height>568</height>
     </size>
    </property>
    <property name="windowIcon">
@@ -90,7 +90,84 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QFormLayout" name="formLayout">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="7" column="0">
+      <widget class="QLabel" name="lambdaLabel">
+       <property name="text">
+        <string>Lambda</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1" colspan="2">
+      <widget class="QSpinBox" name="Max">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QSpinBox" name="Samples">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>500000000</number>
+       </property>
+       <property name="value">
+        <number>10000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QToolButton" name="Autoclear">
+       <property name="text">
+        <string>Autoclear</string>
+       </property>
+       <property name="icon">
+        <iconset theme="edit-clear">
+         <normaloff>.</normaloff>.</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="imeanLabel">
+       <property name="text">
+        <string>Mean</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QToolButton" name="refreshTool">
+       <property name="text">
+        <string>Refresh</string>
+       </property>
+       <property name="icon">
+        <iconset theme="view-refresh">
+         <normaloff>.</normaloff>.</iconset>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="distributionLabel">
        <property name="text">
@@ -98,38 +175,11 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="Distribution">
-       <item>
-        <property name="text">
-         <string>Uniform</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Bernoulli</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Poisson</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Normal</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Triangle</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Sampling</string>
-        </property>
-       </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="rmeanLabel">
+       <property name="text">
+        <string>Mean</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="0">
@@ -139,8 +189,47 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="10" column="0">
+      <widget class="QLabel" name="sigmaLabel">
+       <property name="text">
+        <string>Sigma</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QSpinBox" name="Min">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>99</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QPushButton" name="runButton">
+       <property name="text">
+        <string>Calculate</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
       <widget class="QComboBox" name="Engine">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>rand48</string>
@@ -163,17 +252,29 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="seedLabel">
-       <property name="text">
-        <string>Seed</string>
+     <item row="10" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="Sigma">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimum">
+        <double>-100.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>100.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="Seed">
-       <property name="displayIntegerBase">
-        <number>16</number>
+     <item row="6" column="0">
+      <widget class="QLabel" name="minLabel">
+       <property name="text">
+        <string>Maximum</string>
        </property>
       </widget>
      </item>
@@ -184,16 +285,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QSpinBox" name="Samples">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>500000000</number>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="0">
       <widget class="QLabel" name="maxLabel">
        <property name="text">
@@ -201,74 +292,157 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QSpinBox" name="Min">
+     <item row="0" column="1" colspan="2">
+      <widget class="QComboBox" name="Distribution">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Uniform</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Exponential</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Poisson</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Normal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Triangle</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="13" column="0" colspan="3">
+      <widget class="QProgressBar" name="Progress"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="seedLabel">
+       <property name="text">
+        <string>Seed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="Rmean">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
-        <number>0</number>
+        <double>-10.000000000000000</double>
        </property>
        <property name="maximum">
-        <number>99</number>
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="3">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="Seed">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="displayIntegerBase">
+        <number>16</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1" colspan="2">
+      <widget class="QSpinBox" name="Medium">
+       <property name="maximum">
+        <number>10</number>
        </property>
        <property name="value">
-        <number>0</number>
+        <number>5</number>
        </property>
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="minLabel">
+      <widget class="QLabel" name="mediumLabel">
        <property name="text">
-        <string>Maximum</string>
+        <string>Medium</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QSpinBox" name="Max">
+     <item row="7" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="Lambda">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
-        <number>1</number>
+        <double>0.010000000000000</double>
        </property>
        <property name="maximum">
-        <number>100</number>
+        <double>10.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
        </property>
        <property name="value">
-        <number>10</number>
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="threadsLabel">
-       <property name="text">
-        <string>Threads</string>
+     <item row="9" column="1" colspan="2">
+      <widget class="QDoubleSpinBox" name="Imean">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QSpinBox" name="Threads">
        <property name="minimum">
-        <number>1</number>
+        <double>0.010000000000000</double>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <double>10.000000000000000</double>
        </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QCheckBox" name="Autoclear">
-       <property name="text">
-        <string>Autoclear</string>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
        </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QPushButton" name="runButton">
-       <property name="text">
-        <string>Calculate</string>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRun">
    <property name="icon">
     <iconset theme="media-playback-start">
@@ -383,7 +557,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>990</x>
-     <y>375</y>
+     <y>480</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -494,12 +668,60 @@
    <slot>RangeSpinChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>943</x>
-     <y>263</y>
+     <x>990</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>1085</x>
      <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Distribution</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>DistributionValueChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>942</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1148</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>refreshTool</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RefreshButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>855</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1185</x>
+     <y>172</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Medium</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RangeSpinChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>893</x>
+     <y>255</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1058</x>
+     <y>255</y>
     </hint>
    </hints>
   </connection>
@@ -511,5 +733,7 @@
   <slot>PauseActionClicked()</slot>
   <slot>ClearActionClicked()</slot>
   <slot>RangeSpinChanged()</slot>
+  <slot>DistributionValueChanged(int)</slot>
+  <slot>RefreshButtonClicked()</slot>
  </slots>
 </ui>

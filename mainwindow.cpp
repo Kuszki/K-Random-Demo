@@ -26,12 +26,12 @@ MainWindow::MainWindow(QWidget *Parent)
 {
 	ui->setupUi(this);
 
+	ui->Progress->hide();
+
 	ui->Samples->setMaximum(INT_MAX);
 
 	ui->Seed->setMaximum(INT_MAX);
 	ui->Seed->setValue(time(nullptr));
-
-	ui->Threads->setValue(QThreadPool::globalInstance()->maxThreadCount());
 
 	ui->Plot->yAxis->setRange(0.0, 100.0);
 	ui->Plot->xAxis->setRange(-0.5, 10.5);
@@ -42,109 +42,49 @@ MainWindow::MainWindow(QWidget *Parent)
 	ui->Plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
 	Bars = new QCPBars(ui->Plot->xAxis, ui->Plot->yAxis);
-	Progress = new QProgressBar(this);
-
-	ui->statusBar->addPermanentWidget(Progress);
+	About = new AboutDialog(this);
+	Thread = new QThread(this);
+	Worker = new RandomWorker;
 
 	stopLocked << ui->actionStop << ui->actionPause;
 
-	runLocked << ui->actionRun << ui->runButton << ui->Distribution << ui->Engine
-			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Threads;
+	runLocked << ui->actionRun << ui->runButton  << ui->refreshTool << ui->actionClear << ui->Autoclear << ui->Distribution << ui->Engine
+			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Medium << ui->Lambda << ui->Rmean << ui->Imean << ui->Sigma;
 
 	connect(ui->Plot->yAxis, SIGNAL(rangeChanged(const QCPRange&, const QCPRange&)), SLOT(PlotRangeChanged(const QCPRange&, const QCPRange&)));
 
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::finished, boost::bind(&MainWindow::SwitchUiStatus, this, Unlocked));
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::finished, this, &MainWindow::AdjustActionClicked, Qt::QueuedConnection);
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::resultReadyAt, this, &MainWindow::PlotReadyResult, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressBegin, this, boost::bind(&MainWindow::SwitchUiStatus, this, Locked));
 
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::progressRangeChanged, Progress, &QProgressBar::setRange);
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::progressValueChanged, Progress, &QProgressBar::setValue);
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::started, Progress, &QProgressBar::show);
-	connect(&Watcher, &QFutureWatcher<QMap<int, double>>::finished, Progress, &QProgressBar::hide);
+	connect(Worker, &RandomWorker::onResultsReady, this, &MainWindow::PlotReadyResult, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressEnd, this, &MainWindow::StopActionClicked, Qt::QueuedConnection);
 
-	connect(ui->actionPause, &QAction::triggered, &Watcher, &QFutureWatcher<QMap<int, double>>::pause);
-	connect(ui->actionStop, &QAction::triggered, &Watcher, &QFutureWatcher<QMap<int, double>>::cancel);
+	connect(ui->actionRun, &QAction::triggered, Worker, &RandomWorker::resumeProgress, Qt::DirectConnection);
+	connect(ui->actionPause, &QAction::triggered, Worker, &RandomWorker::pauseProgress, Qt::DirectConnection);
+	connect(ui->actionStop, &QAction::triggered, Worker, &RandomWorker::stopProgress, Qt::DirectConnection);
 
-	Progress->hide();
+	connect(Worker, &RandomWorker::onProgressBegin, ui->Progress, &QProgressBar::show, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressBegin, ui->Progress, &QProgressBar::setRange, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressEnd, ui->Progress, &QProgressBar::hide, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressUpdate, ui->Progress, &QProgressBar::setValue, Qt::QueuedConnection);
 
+	connect(ui->actionAbout, &QAction::triggered, About, &AboutDialog::show);
+
+	Worker->moveToThread(Thread);
+	Thread->start();
+
+	DistributionValueChanged(0);
 	SwitchUiStatus(Unlocked);
 }
 
 MainWindow::~MainWindow(void)
 {
-	Watcher.cancel(); delete ui;
-}
+	Worker->stopProgress();
 
-QMap<int, double> MainWindow::RunWorkerBlock(QPair<int, boost::function<int (void)>> Params)
-{
-	QMap<int, double> Result;
+	Thread->exit();
+	Thread->wait();
 
-	for (int i = 0; i < Params.first; ++i)
-	{
-		++Result[Params.second()];
-	}
-
-	return Result;
-}
-
-boost::function<int (void)> MainWindow::GetWorkerEngine(int Min, int Max, int Seed, int Distribution, int Engine)
-{
-	qDebug() << Seed;
-
-	switch (Distribution)
-	{
-		case 0:
-			switch (Engine)
-			{
-				case 0: return boost::bind(boost::random::uniform_int_distribution<>(Min, Max), boost::random::rand48(Seed));
-				case 1: return boost::bind(boost::random::uniform_int_distribution<>(Min, Max), boost::random::taus88(Seed));
-				case 2: return boost::bind(boost::random::uniform_int_distribution<>(Min, Max), boost::random::ranlux4(Seed));
-				case 3: return boost::bind(boost::random::uniform_int_distribution<>(Min, Max), boost::random::mt11213b(Seed));
-			}
-		break;
-
-		case 1:
-			switch (Engine)
-			{
-				case 0: return boost::bind(boost::random::bernoulli_distribution<>(), boost::random::rand48(Seed));
-				case 1: return boost::bind(boost::random::bernoulli_distribution<>(), boost::random::taus88(Seed));
-				case 2: return boost::bind(boost::random::bernoulli_distribution<>(), boost::random::ranlux4(Seed));
-				case 3: return boost::bind(boost::random::bernoulli_distribution<>(), boost::random::mt11213b(Seed));
-			}
-		break;
-
-		case 2:
-			switch (Engine)
-			{
-				case 0: return boost::bind(boost::random::poisson_distribution<>(), boost::random::rand48(Seed));
-				case 1: return boost::bind(boost::random::poisson_distribution<>(), boost::random::taus88(Seed));
-				case 2: return boost::bind(boost::random::poisson_distribution<>(), boost::random::ranlux4(Seed));
-				case 3: return boost::bind(boost::random::poisson_distribution<>(), boost::random::mt11213b(Seed));
-			}
-		break;
-
-		case 3:
-			switch (Engine)
-			{
-				case 0: return boost::bind(boost::random::normal_distribution<>(Min, Max), boost::random::rand48(Seed));
-				case 1: return boost::bind(boost::random::normal_distribution<>(Min, Max), boost::random::taus88(Seed));
-				case 2: return boost::bind(boost::random::normal_distribution<>(Min, Max), boost::random::ranlux4(Seed));
-				case 3: return boost::bind(boost::random::normal_distribution<>(Min, Max), boost::random::mt11213b(Seed));
-			}
-		break;
-
-		case 4:
-			switch (Engine)
-			{
-				case 0: return boost::bind(boost::random::triangle_distribution<>(Min, Max), boost::random::rand48(Seed));
-				case 1: return boost::bind(boost::random::triangle_distribution<>(Min, Max), boost::random::taus88(Seed));
-				case 2: return boost::bind(boost::random::triangle_distribution<>(Min, Max), boost::random::ranlux4(Seed));
-				case 3: return boost::bind(boost::random::triangle_distribution<>(Min, Max), boost::random::mt11213b(Seed));
-			}
-		break;
-	}
-
-	return boost::bind(boost::random::uniform_int_distribution<>(Min, Max), boost::random::rand48(Seed));
+	delete Worker;
+	delete ui;
 }
 
 void MainWindow::SwitchUiStatus(MainWindow::UiStatus Status)
@@ -169,14 +109,6 @@ void MainWindow::SwitchUiStatus(MainWindow::UiStatus Status)
 			}
 		}
 		break;
-
-		case Normal:
-
-		break;
-
-		case Extended:
-
-		break;
 	}
 }
 
@@ -185,29 +117,60 @@ void MainWindow::PlotRangeChanged(const QCPRange& New, const QCPRange& Old)
 	if (New.lower < 0) ui->Plot->yAxis->setRange(0, Old.size());
 }
 
-void MainWindow::PlotReadyResult(int ID)
+void MainWindow::PlotReadyResult(const QMap<int, int>& Samples)
 {
 	const QTime Now = QTime::currentTime();
 
-	auto Result = Watcher.resultAt(ID);
-	double Sum = 0.0;
-
-	for (auto i = Result.begin(); i != Result.end(); ++i)
+	for (auto i = Samples.begin(); i != Samples.end(); ++i)
 	{
 		Results[i.key()] += i.value();
 	}
 
-	for (const auto& S : Results) Sum += S;
-	for (auto& S : Results) S = 100.0 * S / Sum;
-
-	if (Last.msecsTo(Now) > 100)
+	if (Last.msecsTo(Now) > 50)
 	{
-		Bars->setData(Results.keys().toVector(),
-				    Results.values().toVector());
+		auto Values = Results.values().toVector();
+		double Sum = 0.0;
 
-		ui->Plot->replot();
+		for (const auto& I : Values) Sum += I;
+		for (auto& I : Values) I = 100 * (I / Sum);
 
-		Last = Now;
+		Bars->setData(Results.keys().toVector(), Values);
+
+		ui->Plot->replot(); Last = Now;
+	}
+}
+
+void MainWindow::DistributionValueChanged(int Distribution)
+{
+	ui->minLabel->hide(); ui->Min->hide();
+	ui->maxLabel->hide(); ui->Max->hide();
+	ui->mediumLabel->hide(); ui->Medium->hide();
+	ui->lambdaLabel->hide(); ui->Lambda->hide();
+	ui->rmeanLabel->hide(); ui->Rmean->hide();
+	ui->imeanLabel->hide(); ui->Imean->hide();
+	ui->sigmaLabel->hide(); ui->Sigma->hide();
+
+	switch (Distribution)
+	{
+		case 0:
+			ui->minLabel->show(); ui->Min->show();
+			ui->maxLabel->show(); ui->Max->show();
+		break;
+		case 1:
+			ui->lambdaLabel->show(); ui->Lambda->show();
+		break;
+		case 2:
+			ui->imeanLabel->show(); ui->Imean->show();
+		break;
+		case 3:
+			ui->rmeanLabel->show(); ui->Rmean->show();
+			ui->sigmaLabel->show(); ui->Sigma->show();
+		break;
+		case 4:
+			ui->minLabel->show(); ui->Min->show();
+			ui->maxLabel->show(); ui->Max->show();
+			ui->mediumLabel->show(); ui->Medium->show();
+		break;
 	}
 }
 
@@ -215,66 +178,63 @@ void MainWindow::RangeSpinChanged(void)
 {
 	ui->Max->setMinimum(ui->Min->value() + 1);
 	ui->Min->setMaximum(ui->Max->value() - 1);
+	ui->Medium->setMinimum(ui->Min->value());
+	ui->Medium->setMaximum(ui->Max->value());
+}
+
+void MainWindow::RefreshButtonClicked(void)
+{
+	ui->Seed->setValue(time(nullptr));
 }
 
 void MainWindow::RunActionClicked(void)
 {
-	SwitchUiStatus(Locked);
-
-	if (Watcher.isPaused())
-	{
-		Watcher.resume();
-	}
-	else
+	if (Worker->getStatus() == RandomWorker::Stopped)
 	{
 		const int Samples = ui->Samples->value();
-		const int Threads = ui->Threads->value();
 
+		const int Seed = ui->Seed->value();
 		const int Engine = ui->Engine->currentIndex();
 		const int Distribution = ui->Distribution->currentIndex();
 
-		const int Min = ui->Min->value();
-		const int Max = ui->Max->value();
+		double P1(0.0), P2(0.0), P3(0.0);
 
-		const int Iters = MAX_ITERS;
-
-		QList<QPair<int, boost::function<int (void)>>> Jobs;
-
-		srand(ui->Seed->value());
-
-		if (Samples / Threads > Iters)
+		switch (Distribution)
 		{
-			int Left = Samples - Iters;
-
-			for (int i = 1; i < (Samples / Iters); ++i, Left -= Iters)
-			{
-				Jobs.append(QPair<int, boost::function<int (void)>>(Iters, GetWorkerEngine(Min, Max, rand(), Distribution, Engine)));
-			}
-
-			Jobs.append(QPair<int, boost::function<int (void)>>(Left, GetWorkerEngine(Min, Max, rand(), Distribution, Engine)));
-		}
-		else
-		{
-			if (Samples >= Threads) for (int i = 0; i < Threads; ++i)
-			{
-				Jobs.append(QPair<int, boost::function<int (void)>>(Samples / Threads, GetWorkerEngine(Min, Max, rand(), Distribution, Engine)));
-			}
-			else Jobs.append(QPair<int, boost::function<int (void)>>(0, GetWorkerEngine(Min, Max, rand(), Distribution, Engine)));
-
-			Jobs.last().first += Samples - Threads * Jobs.last().first;
+			case 0:
+				P1 = ui->Min->value();
+				P2 = ui->Max->value();
+			break;
+			case 1:
+				P1 = ui->Lambda->value();
+			break;
+			case 2:
+				P1 = ui->Imean->value();
+			break;
+			case 3:
+				P1 = ui->Rmean->value();
+				P2 = ui->Sigma->value();
+			break;
+			case 4:
+				P1 = ui->Min->value();
+				P2 = ui->Medium->value();
+				P3 = ui->Max->value();
+			break;
 		}
 
 		if (ui->Autoclear->isChecked()) ClearActionClicked();
 
-		QThreadPool::globalInstance()->setMaxThreadCount(Threads);
+		Worker->setGenerator(P1, P2, P3, Seed, Distribution, Engine);
+		Worker->setSamples(Samples);
 
-		Watcher.setFuture(QtConcurrent::mapped(Jobs, boost::bind(&MainWindow::RunWorkerBlock, this, _1)));
+		Worker->startProgress();
 	}
 }
 
 void MainWindow::StopActionClicked(void)
 {
 	SwitchUiStatus(Unlocked);
+	AdjustActionClicked();
 }
 
 void MainWindow::PauseActionClicked(void)

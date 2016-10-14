@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                                                                         *
- *  Boost.Random demo with gui writen in Qt5                               *
+ *  Tango file converter for DaroD                                         *
  *  Copyright (C) 2016  Łukasz "Kuszki" Dróżdż  l.drozdz@openmailbox.org   *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
@@ -18,85 +18,16 @@
  *                                                                         *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
-
-#include <QtConcurrent>
-
-#include <QProgressBar>
-#include <QMainWindow>
-
-#include <QDebug>
-
-#include <qcustomplot.h>
-#include <limits.h>
-
-#include "randomworker.hpp"
 #include "aboutdialog.hpp"
+#include "ui_aboutdialog.h"
 
-#define MAX_ITERS 5000
-
-namespace Ui
+AboutDialog::AboutDialog(QWidget* Parent)
+: QDialog(Parent), ui(new Ui::AboutDialog)
 {
-	class MainWindow;
+	ui->setupUi(this);
 }
 
-class MainWindow : public QMainWindow
+AboutDialog::~AboutDialog(void)
 {
-
-		Q_OBJECT
-
-	private: enum UiStatus
-	{
-		Unlocked,
-		Locked
-	};
-
-	private:
-
-		Ui::MainWindow* ui = nullptr;
-
-		RandomWorker* Worker = nullptr;
-
-		AboutDialog* About = nullptr;
-
-		QMap<double, double> Results;
-
-		QList<QObject*> runLocked;
-		QList<QObject*> stopLocked;
-
-		QCPBars* Bars = nullptr;
-		QThread* Thread = nullptr;
-
-		QTime Last = QTime::currentTime();
-
-	private:
-
-		void SwitchUiStatus(UiStatus Status);
-
-	public:
-
-		explicit MainWindow(QWidget* Parent = nullptr);
-		virtual ~MainWindow(void) override;
-
-	private slots:
-
-		void PlotRangeChanged(const QCPRange& New, const QCPRange& Old);
-
-		void PlotReadyResult(const QMap<int, int>& Samples);
-
-		void DistributionValueChanged(int Distribution);
-
-		void RangeSpinChanged(void);
-
-		void RefreshButtonClicked(void);
-
-		void RunActionClicked(void);
-		void StopActionClicked(void);
-		void PauseActionClicked(void);
-		void AdjustActionClicked(void);
-		void ClearActionClicked(void);
-
-};
-
-#endif // MAINWINDOW_HPP
+	delete ui;
+}
