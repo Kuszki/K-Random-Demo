@@ -90,26 +90,18 @@ MainWindow::~MainWindow(void)
 
 void MainWindow::SwitchUiStatus(MainWindow::UiStatus Status)
 {
-	switch (Status)
+	bool Lock = Status == Locked;
+
+	for (auto Control : runLocked)
 	{
-		case Locked:
-		case Unlocked:
-		{
-			bool Lock = Status == Locked;
+		if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(!Lock);
+		else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(!Lock);
+	}
 
-			for (auto Control : runLocked)
-			{
-				if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(!Lock);
-				else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(!Lock);
-			}
-
-			for (auto Control : stopLocked)
-			{
-				if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(Lock);
-				else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(Lock);
-			}
-		}
-		break;
+	for (auto Control : stopLocked)
+	{
+		if (auto A = qobject_cast<QAction*>(Control)) A->setEnabled(Lock);
+		else if (auto W = qobject_cast<QWidget*>(Control)) W->setEnabled(Lock);
 	}
 }
 
