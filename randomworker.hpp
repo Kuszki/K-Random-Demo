@@ -22,7 +22,9 @@
 #define RANDOMWORKER_HPP
 
 #include <QObject>
+#include <QThread>
 #include <QMutex>
+#include <QTime>
 #include <QMap>
 
 #include <boost/bind.hpp>
@@ -52,9 +54,10 @@ class RandomWorker : public QObject
 		STATUS Status = Stopped;
 
 		unsigned Loops = 1000;
-		unsigned Iters = 5000;
+		unsigned Iters = 100;
 		unsigned Left = 0;
 		unsigned Current = 0;
+		unsigned Sleep = 0;
 
 	public:
 
@@ -67,6 +70,7 @@ class RandomWorker : public QObject
 
 		void setSamples(unsigned Samples);
 		void setBlocks(unsigned Blocks);
+		void setSleep(unsigned Msecs);
 
 		STATUS getStatus(void) const;
 

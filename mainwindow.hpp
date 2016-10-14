@@ -34,8 +34,6 @@
 #include "randomworker.hpp"
 #include "aboutdialog.hpp"
 
-#define MAX_ITERS 5000
-
 namespace Ui
 {
 	class MainWindow;
@@ -67,8 +65,6 @@ class MainWindow : public QMainWindow
 
 		QCPBars* Bars = nullptr;
 		QThread* Thread = nullptr;
-
-		QTime Last = QTime::currentTime();
 
 	private:
 

@@ -82,7 +82,7 @@ Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny �
         <translation>Rozkład</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="336"/>
+        <location filename="mainwindow.ui" line="340"/>
         <source>Seed</source>
         <translation>Ziarno</translation>
     </message>
@@ -92,7 +92,7 @@ Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny �
         <translation>Próbki</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="291"/>
+        <location filename="mainwindow.ui" line="298"/>
         <source>Minimum</source>
         <translation>Minimum</translation>
     </message>
@@ -158,92 +158,107 @@ Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on użyteczny �
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="305"/>
+        <location filename="mainwindow.ui" line="291"/>
+        <source>Step %v of %m (%p%)</source>
+        <translation>Krok %v z %m (%p%)</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="312"/>
         <source>Uniform</source>
         <translation>Jednostajny</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
+        <location filename="mainwindow.ui" line="317"/>
         <source>Exponential</source>
         <translation>Wykładniczy</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="315"/>
+        <location filename="mainwindow.ui" line="322"/>
         <source>Poisson</source>
         <translation>Poissona</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="320"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>Normal</source>
         <translation>Normalny</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="325"/>
+        <location filename="mainwindow.ui" line="332"/>
         <source>Triangle</source>
         <translation>Trójkątny</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="395"/>
+        <location filename="mainwindow.ui" line="399"/>
         <source>Medium</source>
         <translation>Szczyt</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="452"/>
+        <location filename="mainwindow.ui" line="450"/>
+        <source> sps</source>
+        <translation> p/s</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="466"/>
+        <source>Speed</source>
+        <translation>Prędkość</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="479"/>
         <source>Run</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="455"/>
+        <location filename="mainwindow.ui" line="482"/>
         <source>F5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="464"/>
+        <location filename="mainwindow.ui" line="491"/>
         <source>Quit</source>
         <translation>Wyjście</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="473"/>
+        <location filename="mainwindow.ui" line="500"/>
         <source>About</source>
         <translation>O programie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="476"/>
+        <location filename="mainwindow.ui" line="503"/>
         <source>F1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="485"/>
+        <location filename="mainwindow.ui" line="512"/>
         <source>Clear</source>
         <translation>Wyczyść</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="488"/>
+        <location filename="mainwindow.ui" line="515"/>
         <source>Del</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="497"/>
+        <location filename="mainwindow.ui" line="524"/>
         <source>Adjust</source>
         <translation>Dopasuj</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="506"/>
+        <location filename="mainwindow.ui" line="533"/>
         <source>Stop</source>
         <translation>Zatrzymaj</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="509"/>
+        <location filename="mainwindow.ui" line="536"/>
         <source>Esc</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="518"/>
+        <location filename="mainwindow.ui" line="545"/>
         <source>Pause</source>
         <translation>Wstrzymaj</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="521"/>
+        <location filename="mainwindow.ui" line="548"/>
         <source>F6</source>
         <translation></translation>
     </message>

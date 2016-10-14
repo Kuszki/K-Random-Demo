@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *Parent)
 	stopLocked << ui->actionStop << ui->actionPause;
 
 	runLocked << ui->actionRun << ui->runButton  << ui->refreshTool << ui->actionClear << ui->Autoclear << ui->Distribution << ui->Engine
-			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Medium << ui->Lambda << ui->Rmean << ui->Imean << ui->Sigma;
+			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Medium << ui->Lambda << ui->Rmean << ui->Imean << ui->Sigma << ui->Speed;
 
 	connect(ui->Plot->yAxis, SIGNAL(rangeChanged(const QCPRange&, const QCPRange&)), SLOT(PlotRangeChanged(const QCPRange&, const QCPRange&)));
 
@@ -119,14 +119,12 @@ void MainWindow::PlotRangeChanged(const QCPRange& New, const QCPRange& Old)
 
 void MainWindow::PlotReadyResult(const QMap<int, int>& Samples)
 {
-	const QTime Now = QTime::currentTime();
-
 	for (auto i = Samples.begin(); i != Samples.end(); ++i)
 	{
 		Results[i.key()] += i.value();
 	}
 
-	if (Last.msecsTo(Now) > 50)
+	if (!thread()->eventDispatcher()->hasPendingEvents())
 	{
 		auto Values = Results.values().toVector();
 		double Sum = 0.0;
@@ -136,7 +134,7 @@ void MainWindow::PlotReadyResult(const QMap<int, int>& Samples)
 
 		Bars->setData(Results.keys().toVector(), Values);
 
-		ui->Plot->replot(); Last = Now;
+		ui->Plot->replot();
 	}
 }
 
@@ -192,11 +190,14 @@ void MainWindow::RunActionClicked(void)
 	if (Worker->getStatus() == RandomWorker::Stopped)
 	{
 		const int Samples = ui->Samples->value();
+		const int Speed = ui->Speed->value();
 
 		const int Seed = ui->Seed->value();
 		const int Engine = ui->Engine->currentIndex();
 		const int Distribution = ui->Distribution->currentIndex();
 
+		unsigned Sleep(Speed ? 1000 / Speed : 0);
+		unsigned Block(1), Base(1000);
 		double P1(0.0), P2(0.0), P3(0.0);
 
 		switch (Distribution)
@@ -222,10 +223,25 @@ void MainWindow::RunActionClicked(void)
 			break;
 		}
 
+		if (Speed) while (!Sleep)
+		{
+			Base *= 10;
+			Block *= 10;
+
+			Sleep = Base / Speed;
+		}
+		else
+		{
+			Block = 5000;
+			Sleep = 0;
+		}
+
 		if (ui->Autoclear->isChecked()) ClearActionClicked();
 
 		Worker->setGenerator(P1, P2, P3, Seed, Distribution, Engine);
 		Worker->setSamples(Samples);
+		Worker->setBlocks(Block);
+		Worker->setSleep(Sleep);
 
 		Worker->startProgress();
 	}

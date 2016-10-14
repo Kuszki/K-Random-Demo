@@ -32,6 +32,7 @@ void RandomWorker::runLoop(void)
 
 	if (Left && Status == Running)
 	{
+		const QTime Start = QTime::currentTime();
 		QMap<int, int> Results;
 
 		for (unsigned i = 0; Left && i < Iters; ++i, --Left)
@@ -39,8 +40,13 @@ void RandomWorker::runLoop(void)
 			++Results[Generator()];
 		}
 
+		const long long int Diff = Sleep * Iters - Start.msecsTo(QTime::currentTime());
+
 		emit onResultsReady(Results);
 		emit onProgressUpdate(++Current);
+
+		if (Diff > 0) thread()->msleep(Diff);
+
 		emit onLoopRequest();
 	}
 	else if (!Left) stopProgress();
@@ -127,6 +133,13 @@ void RandomWorker::setSamples(unsigned Samples)
 void RandomWorker::setBlocks(unsigned Blocks)
 {
 	Iters = Blocks;
+}
+
+void RandomWorker::setSleep(unsigned Msecs)
+{
+	Locker.lock();
+	Sleep = Msecs;
+	Locker.unlock();
 }
 
 boost::function<int (void)> RandomWorker::getGenerator(double P1, double P2, double P3, int Seed, int Distribution, int Engine)
