@@ -96,6 +96,7 @@ void RandomWorker::resumeProgress(void)
 	if (Status == Paused)
 	{
 		emit onStatusChanged(Status = Running);
+		emit onProgressResume();
 		emit onLoopRequest();
 	}
 }

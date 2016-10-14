@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *Parent)
 	connect(ui->Plot->yAxis, SIGNAL(rangeChanged(const QCPRange&, const QCPRange&)), SLOT(PlotRangeChanged(const QCPRange&, const QCPRange&)));
 
 	connect(Worker, &RandomWorker::onProgressBegin, this, boost::bind(&MainWindow::SwitchUiStatus, this, Locked));
+	connect(Worker, &RandomWorker::onProgressResume, this, boost::bind(&MainWindow::SwitchUiStatus, this, Locked));
 
 	connect(Worker, &RandomWorker::onResultsReady, this, &MainWindow::PlotReadyResult, Qt::QueuedConnection);
 	connect(Worker, &RandomWorker::onProgressEnd, this, &MainWindow::StopActionClicked, Qt::QueuedConnection);

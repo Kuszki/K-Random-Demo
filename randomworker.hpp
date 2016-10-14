@@ -93,6 +93,7 @@ class RandomWorker : public QObject
 
 		void onProgressBegin(int, int);
 		void onProgressUpdate(int);
+		void onProgressResume(void);
 		void onProgressEnd(void);
 
 		void onLoopRequest(void);
