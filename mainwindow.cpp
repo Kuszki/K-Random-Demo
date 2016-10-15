@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *Parent)
 
 	stopLocked << ui->actionStop << ui->actionPause;
 
-	runLocked << ui->actionRun << ui->runButton  << ui->refreshTool << ui->actionClear << ui->Autoclear << ui->Distribution << ui->Engine
+	runLocked << ui->actionRun << ui->runButton  << ui->refreshTool << ui->actionClear << ui->actionSave << ui->Autoclear << ui->Distribution << ui->Engine
 			<< ui->Seed << ui->Samples << ui->Max << ui->Min << ui->Medium << ui->Lambda << ui->Rmean << ui->Imean << ui->Sigma << ui->Speed;
 
 	connect(ui->Plot->yAxis, SIGNAL(rangeChanged(const QCPRange&, const QCPRange&)), SLOT(PlotRangeChanged(const QCPRange&, const QCPRange&)));
@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *Parent)
 
 	connect(Worker, &RandomWorker::onResultsReady, this, &MainWindow::PlotReadyResult, Qt::QueuedConnection);
 	connect(Worker, &RandomWorker::onProgressEnd, this, &MainWindow::StopActionClicked, Qt::QueuedConnection);
+	connect(Worker, &RandomWorker::onProgressEnd, this, &MainWindow::PlotSavedData, Qt::QueuedConnection);
 
 	connect(ui->actionRun, &QAction::triggered, Worker, &RandomWorker::resumeProgress, Qt::DirectConnection);
 	connect(ui->actionPause, &QAction::triggered, Worker, &RandomWorker::pauseProgress, Qt::DirectConnection);
@@ -119,16 +120,21 @@ void MainWindow::PlotReadyResult(const QMap<int, int>& Samples)
 
 	if (!thread()->eventDispatcher()->hasPendingEvents())
 	{
-		auto Values = Results.values().toVector();
-		double Sum = 0.0;
-
-		for (const auto& I : Values) Sum += I;
-		for (auto& I : Values) I = 100 * (I / Sum);
-
-		Bars->setData(Results.keys().toVector(), Values);
-
-		ui->Plot->replot();
+		PlotSavedData();
 	}
+}
+
+void MainWindow::PlotSavedData(void)
+{
+	auto Values = Results.values().toVector();
+	double Sum = 0.0;
+
+	for (const auto& I : Values) Sum += I;
+	for (auto& I : Values) I = 100 * (I / Sum);
+
+	Bars->setData(Results.keys().toVector(), Values);
+
+	ui->Plot->replot();
 }
 
 void MainWindow::DistributionValueChanged(int Distribution)
@@ -189,7 +195,7 @@ void MainWindow::RunActionClicked(void)
 		const int Engine = ui->Engine->currentIndex();
 		const int Distribution = ui->Distribution->currentIndex();
 
-		unsigned Sleep(Speed ? 1000 / Speed : 1), Block(1);
+		double Sleep(Speed ? 1000 / Speed : 1), Block(1);
 		double P1(0.0), P2(0.0), P3(0.0);
 
 		switch (Distribution)
@@ -215,10 +221,13 @@ void MainWindow::RunActionClicked(void)
 			break;
 		}
 
-		if (Speed) while (Sleep < 10)
+		if (Speed)
 		{
-			Block *= 10;
-			Sleep *= 10;
+			if (Sleep < 50)
+			{
+				Block *= (50 * Speed) / 1000.0;
+				Sleep = 50;
+			}
 		}
 		else
 		{
@@ -262,4 +271,31 @@ void MainWindow::ClearActionClicked(void)
 	Results.clear();
 
 	ui->Plot->replot();
+}
+
+void MainWindow::SaveActionClicked(void)
+{
+	QString Path = QFileDialog::getSaveFileName(this);
+
+	if (!Path.isEmpty())
+	{
+		QFile File(Path);
+
+		if (File.open(QFile::WriteOnly | QFile::Text))
+		{
+			const QChar Sep = QChar(';');
+			QTextStream Stream(&File);
+
+			Stream << tr("Sample") << Sep << tr("Count") << endl;
+
+			for (auto i = Results.begin(); i != Results.end(); ++i)
+			{
+				Stream << i.key() << Sep << i.value() << endl;
+			}
+		}
+		else
+		{
+			QMessageBox::critical(this, tr("Error"), File.errorString());
+		}
+	}
 }

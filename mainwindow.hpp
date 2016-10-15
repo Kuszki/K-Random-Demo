@@ -81,6 +81,8 @@ class MainWindow : public QMainWindow
 
 		void PlotReadyResult(const QMap<int, int>& Samples);
 
+		void PlotSavedData(void);
+
 		void DistributionValueChanged(int Distribution);
 
 		void RangeSpinChanged(void);
@@ -92,6 +94,7 @@ class MainWindow : public QMainWindow
 		void PauseActionClicked(void);
 		void AdjustActionClicked(void);
 		void ClearActionClicked(void);
+		void SaveActionClicked(void);
 
 };
 

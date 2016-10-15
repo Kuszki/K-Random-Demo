@@ -44,6 +44,7 @@
    <addaction name="actionPause"/>
    <addaction name="actionStop"/>
    <addaction name="separator"/>
+   <addaction name="actionSave"/>
    <addaction name="actionAdjust"/>
    <addaction name="actionClear"/>
   </widget>
@@ -548,6 +549,17 @@
     <string>F6</string>
    </property>
   </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -584,7 +596,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>990</x>
-     <y>480</y>
+     <y>515</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -679,8 +691,8 @@
    <slot>RangeSpinChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
-     <y>227</y>
+     <x>990</x>
+     <y>271</y>
     </hint>
     <hint type="destinationlabel">
      <x>1212</x>
@@ -696,7 +708,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>990</x>
-     <y>306</y>
+     <y>341</y>
     </hint>
     <hint type="destinationlabel">
      <x>1085</x>
@@ -743,12 +755,28 @@
    <slot>RangeSpinChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>893</x>
-     <y>255</y>
+     <x>990</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>1058</x>
      <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveActionClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
     </hint>
    </hints>
   </connection>
@@ -762,5 +790,6 @@
   <slot>RangeSpinChanged()</slot>
   <slot>DistributionValueChanged(int)</slot>
   <slot>RefreshButtonClicked()</slot>
+  <slot>SaveActionClicked()</slot>
  </slots>
 </ui>
