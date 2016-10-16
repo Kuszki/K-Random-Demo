@@ -42,4 +42,4 @@ LIBS			+=	-lqcustomplot
 
 TRANSLATIONS	+=	k-random-demo_pl.ts
 
-QMAKE_CXXFLAGS	+=	-s -march=native
+QMAKE_CXXFLAGS	+=	-s -march=native -std=c++14

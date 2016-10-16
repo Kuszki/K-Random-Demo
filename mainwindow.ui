@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>700</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,8 @@
   </property>
   <property name="windowIcon">
    <iconset theme="accessories-calculator">
-    <normaloff>.</normaloff>.</iconset>
+    <normaloff/>
+   </iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -79,7 +80,8 @@
    </property>
    <property name="windowIcon">
     <iconset theme="preferences-system">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
@@ -144,7 +146,8 @@
        </property>
        <property name="icon">
         <iconset theme="edit-clear">
-         <normaloff>.</normaloff>.</iconset>
+         <normaloff/>
+        </iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -165,7 +168,8 @@
        </property>
        <property name="icon">
         <iconset theme="view-refresh">
-         <normaloff>.</normaloff>.</iconset>
+         <normaloff/>
+        </iconset>
        </property>
       </widget>
      </item>
@@ -474,7 +478,8 @@
   <action name="actionRun">
    <property name="icon">
     <iconset theme="media-playback-start">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Run</string>
@@ -486,7 +491,8 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset theme="exit">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -495,7 +501,8 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset theme="help-about">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -507,7 +514,8 @@
   <action name="actionClear">
    <property name="icon">
     <iconset theme="edit-clear">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Clear</string>
@@ -519,7 +527,8 @@
   <action name="actionAdjust">
    <property name="icon">
     <iconset theme="view-fullscreen">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Adjust</string>
@@ -528,7 +537,8 @@
   <action name="actionStop">
    <property name="icon">
     <iconset theme="media-playback-stop">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -540,7 +550,8 @@
   <action name="actionPause">
    <property name="icon">
     <iconset theme="media-playback-pause">
-     <normaloff>.</normaloff>.</iconset>
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Pause</string>
@@ -551,7 +562,9 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset theme="document-save"/>
+    <iconset theme="document-save">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Save</string>
