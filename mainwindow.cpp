@@ -133,6 +133,7 @@ void MainWindow::PlotSavedData(void)
 	for (auto& I : Values) I = 100 * (I / Sum);
 
 	Bars->setData(Results.keys().toVector(), Values);
+	Bars->rescaleKeyAxis();
 
 	ui->Plot->replot();
 }
